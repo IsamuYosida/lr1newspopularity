@@ -1,0 +1,11 @@
+{
+  "test_size": 7951,
+  "n_features": 59,
+  "baseline_mean_shares": 1803.435730154749,
+  "model_mae": 2087.5340787465866,
+  "model_rmse": 8128.64778387328,
+  "model_r2": 0.0011814479746963258,
+  "baseline_mae": 2216.3654265198484,
+  "baseline_rmse": 8224.004241995659,
+  "baseline_r2": -0.022390110377184635
+}
