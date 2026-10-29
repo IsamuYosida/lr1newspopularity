@@ -1,4 +1,5 @@
 """Smoke-тесты: модули на месте, метрики содержат ключи."""
+
 import json
 from pathlib import Path
 
@@ -14,7 +15,11 @@ def test_metrics_file_has_keys():
         return  # до первого dvc repro
     m = json.loads(p.read_text(encoding="utf-8"))
     expected = {
-        "model_mae", "model_rmse", "model_r2",
-        "baseline_mae", "baseline_rmse", "baseline_r2",
+        "model_mae",
+        "model_rmse",
+        "model_r2",
+        "baseline_mae",
+        "baseline_rmse",
+        "baseline_r2",
     }
     assert expected <= set(m)

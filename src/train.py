@@ -1,4 +1,5 @@
 """Обучение модели. Модель выбирается в params.yaml → train.model."""
+
 from __future__ import annotations
 
 from pathlib import Path
@@ -71,7 +72,7 @@ def train(
     out.parent.mkdir(parents=True, exist_ok=True)
     joblib.dump(model, out)
 
-    print(f"Модель: {params["model"]}")
+    print(f"Модель: {params['model']}")
     print(f"Обучено на {len(X_train)} статьях, {X_train.shape[1]} признаках.")
     print(f"Сохранено: {out}")
 

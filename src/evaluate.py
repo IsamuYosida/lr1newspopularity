@@ -1,4 +1,5 @@
 """Оценка модели: метрики, baseline и проверка порога."""
+
 from __future__ import annotations
 
 import json
@@ -13,17 +14,17 @@ from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
 def _metrics(y_true, y_pred) -> dict:
     return {
-        "mae":  float(mean_absolute_error(y_true, y_pred)),
+        "mae": float(mean_absolute_error(y_true, y_pred)),
         "rmse": float(np.sqrt(mean_squared_error(y_true, y_pred))),
-        "r2":   float(r2_score(y_true, y_pred)),
+        "r2": float(r2_score(y_true, y_pred)),
     }
 
 
 def evaluate(
     features_dir: str = "data/features",
-    model_path: str   = "models/model.joblib",
-    report_path: str  = "reports/metrics.json",
-    params_path: str  = "params.yaml",
+    model_path: str = "models/model.joblib",
+    report_path: str = "reports/metrics.json",
+    params_path: str = "params.yaml",
 ) -> None:
     with open(params_path, encoding="utf-8") as fh:
         params = yaml.safe_load(fh)
@@ -32,8 +33,8 @@ def evaluate(
     feat = Path(features_dir)
     X_train = pd.read_csv(feat / "X_train.csv")
     y_train = pd.read_csv(feat / "y_train.csv").squeeze("columns")
-    X_test  = pd.read_csv(feat / "X_test.csv")
-    y_test  = pd.read_csv(feat / "y_test.csv").squeeze("columns")
+    X_test = pd.read_csv(feat / "X_test.csv")
+    y_test = pd.read_csv(feat / "y_test.csv").squeeze("columns")
 
     if list(X_train.columns) != list(X_test.columns):
         raise ValueError("Признаки train и test не совпадают.")
@@ -51,15 +52,15 @@ def evaluate(
 
     # ПЛОСКИЙ JSON: DVC читает только плоские ключи и числа.
     results = {
-        "test_size":            int(len(y_test)),
-        "n_features":           int(X_test.shape[1]),
+        "test_size": int(len(y_test)),
+        "n_features": int(X_test.shape[1]),
         "baseline_mean_shares": baseline_value,
-        "model_mae":   m["mae"],
-        "model_rmse":  m["rmse"],
-        "model_r2":    m["r2"],
-        "baseline_mae":  b["mae"],
+        "model_mae": m["mae"],
+        "model_rmse": m["rmse"],
+        "model_r2": m["r2"],
+        "baseline_mae": b["mae"],
         "baseline_rmse": b["rmse"],
-        "baseline_r2":   b["r2"],
+        "baseline_r2": b["r2"],
     }
 
     report = Path(report_path)
