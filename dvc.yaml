@@ -1,0 +1,50 @@
+stages:
+  prepare:
+    cmd: python -m src.prepare
+    deps:
+      - src/prepare.py
+      - src/schema.py
+      - data/external/OnlineNewsPopularity.csv
+    params:
+      - prepare
+    outs:
+      - data/processed/train.csv
+      - data/processed/test.csv
+
+  featurize:
+    cmd: python -m src.featurize
+    deps:
+      - src/featurize.py
+      - data/processed/train.csv
+      - data/processed/test.csv
+    outs:
+      - data/features/X_train.csv
+      - data/features/X_test.csv
+      - data/features/y_train.csv
+      - data/features/y_test.csv
+
+  train:
+    cmd: python -m src.train
+    deps:
+      - src/train.py
+      - data/features/X_train.csv
+      - data/features/y_train.csv
+    params:
+      - train
+    outs:
+      - models/model.joblib
+
+  evaluate:
+    cmd: python -m src.evaluate
+    deps:
+      - src/evaluate.py
+      - models/model.joblib
+      - data/features/X_train.csv
+      - data/features/y_train.csv
+      - data/features/X_test.csv
+      - data/features/y_test.csv
+    params:
+      - evaluate
+    metrics:
+      - reports/metrics.json:
+          cache: false

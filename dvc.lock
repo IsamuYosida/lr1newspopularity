@@ -1,0 +1,137 @@
+schema: '2.0'
+stages:
+  prepare:
+    cmd: python -m src.prepare
+    deps:
+    - path: data/external/OnlineNewsPopularity.csv
+      hash: md5
+      md5: 6e6f1cfc9e03cfa1bc42dbc5c24075e7
+      size: 24311769
+    - path: src/prepare.py
+      hash: md5
+      md5: db6b7471f5f33b77899ce1d42810fe05
+      size: 2177
+    - path: src/schema.py
+      hash: md5
+      md5: b99f5fd9004d07a93c900ddecb0acd80
+      size: 982
+    params:
+      params.yaml:
+        prepare:
+          test_fraction: 0.2
+    outs:
+    - path: data/processed/test.csv
+      hash: md5
+      md5: 23304970dfc0551f2c094dc7aa3cac8c
+      size: 4358005
+    - path: data/processed/train.csv
+      hash: md5
+      md5: b37e95abf24894d6b3c2f9b0c53b1b2d
+      size: 17576156
+  featurize:
+    cmd: python -m src.featurize
+    deps:
+    - path: data/processed/test.csv
+      hash: md5
+      md5: 23304970dfc0551f2c094dc7aa3cac8c
+      size: 4358005
+    - path: data/processed/train.csv
+      hash: md5
+      md5: b37e95abf24894d6b3c2f9b0c53b1b2d
+      size: 17576156
+    - path: src/featurize.py
+      hash: md5
+      md5: e741b10bc4924e579e0a9d7584cdaab5
+      size: 1926
+    outs:
+    - path: data/features/X_test.csv
+      hash: md5
+      md5: bfbeb0a8737dd99649d718f625a1f754
+      size: 3842102
+    - path: data/features/X_train.csv
+      hash: md5
+      md5: 00198114c4d86822e74798c85365be9e
+      size: 15580342
+    - path: data/features/y_test.csv
+      hash: md5
+      md5: 68386aa41c7657093dd279b8b0da14f7
+      size: 37579
+    - path: data/features/y_train.csv
+      hash: md5
+      md5: 5816a6cbcb3f4b0f6d1939289cb0b1cd
+      size: 151591
+  train:
+    cmd: python -m src.train
+    deps:
+    - path: data/features/X_train.csv
+      hash: md5
+      md5: 00198114c4d86822e74798c85365be9e
+      size: 15580342
+    - path: data/features/y_train.csv
+      hash: md5
+      md5: 5816a6cbcb3f4b0f6d1939289cb0b1cd
+      size: 151591
+    - path: src/train.py
+      hash: md5
+      md5: 988416c5b6c015e57dfa658dc5211615
+      size: 3016
+    params:
+      params.yaml:
+        train:
+          model: hist_gb
+          target_transform: log1p
+          linear_ridge:
+            alpha: 10.0
+            select_k: 20
+          random_forest:
+            n_estimators: 300
+            max_depth: 20
+            min_samples_leaf: 3
+            random_state: 42
+            n_jobs: -1
+          hist_gb:
+            max_iter: 400
+            max_depth: 6
+            learning_rate: 0.05
+            random_state: 42
+    outs:
+    - path: models/model.joblib
+      hash: md5
+      md5: 1dd319042997e0686d60189887e7e9cb
+      size: 755270
+  evaluate:
+    cmd: python -m src.evaluate
+    deps:
+    - path: data/features/X_test.csv
+      hash: md5
+      md5: bfbeb0a8737dd99649d718f625a1f754
+      size: 3842102
+    - path: data/features/X_train.csv
+      hash: md5
+      md5: 00198114c4d86822e74798c85365be9e
+      size: 15580342
+    - path: data/features/y_test.csv
+      hash: md5
+      md5: 68386aa41c7657093dd279b8b0da14f7
+      size: 37579
+    - path: data/features/y_train.csv
+      hash: md5
+      md5: 5816a6cbcb3f4b0f6d1939289cb0b1cd
+      size: 151591
+    - path: models/model.joblib
+      hash: md5
+      md5: 1dd319042997e0686d60189887e7e9cb
+      size: 755270
+    - path: src/evaluate.py
+      hash: md5
+      md5: c9c36392903e886a51e319aae995f768
+      size: 2948
+    params:
+      params.yaml:
+        evaluate:
+          min_r2: 0.0
+    outs:
+    - path: reports/metrics.json
+      hash: md5
+      md5: 821d93c713b1b4157d66eb915b07d932
+      size: 311
