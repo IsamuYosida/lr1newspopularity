@@ -1,4 +1,5 @@
 """Признаки: убираем url и неинформативные колонки, оставляем числовые."""
+
 from __future__ import annotations
 
 from pathlib import Path
@@ -33,8 +34,7 @@ def featurize(
 
     for name, frame in (("X_train", x_train), ("X_test", x_test)):
         non_num = [
-            c for c in frame.columns
-            if not pd.api.types.is_numeric_dtype(frame[c])
+            c for c in frame.columns if not pd.api.types.is_numeric_dtype(frame[c])
         ]
         if non_num:
             raise ValueError(f"{name}: нечисловые признаки {non_num}")

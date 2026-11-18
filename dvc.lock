@@ -5,16 +5,16 @@ stages:
     deps:
     - path: data/external/OnlineNewsPopularity.csv
       hash: md5
-      md5: 6e6f1cfc9e03cfa1bc42dbc5c24075e7
-      size: 24311769
+      md5: 88cdb5d52f14374d8352cead2acad1f1
+      size: 22479034
     - path: src/prepare.py
       hash: md5
-      md5: db6b7471f5f33b77899ce1d42810fe05
-      size: 2177
+      md5: 018765f7536ad94a6f86e79443626156
+      size: 2166
     - path: src/schema.py
       hash: md5
-      md5: b99f5fd9004d07a93c900ddecb0acd80
-      size: 982
+      md5: 5032b67049fe284d05dcb29536f4a65c
+      size: 963
     params:
       params.yaml:
         prepare:
@@ -22,59 +22,59 @@ stages:
     outs:
     - path: data/processed/test.csv
       hash: md5
-      md5: 23304970dfc0551f2c094dc7aa3cac8c
-      size: 4358005
+      md5: 0d02968ba0739e44110591099ea1b5ea
+      size: 4443979
     - path: data/processed/train.csv
       hash: md5
-      md5: b37e95abf24894d6b3c2f9b0c53b1b2d
-      size: 17576156
+      md5: 9d4c2ba14e9b2264ce2d48d6795d5bd4
+      size: 18036113
   featurize:
     cmd: python -m src.featurize
     deps:
     - path: data/processed/test.csv
       hash: md5
-      md5: 23304970dfc0551f2c094dc7aa3cac8c
-      size: 4358005
+      md5: 0d02968ba0739e44110591099ea1b5ea
+      size: 4443979
     - path: data/processed/train.csv
       hash: md5
-      md5: b37e95abf24894d6b3c2f9b0c53b1b2d
-      size: 17576156
+      md5: 9d4c2ba14e9b2264ce2d48d6795d5bd4
+      size: 18036113
     - path: src/featurize.py
       hash: md5
-      md5: e741b10bc4924e579e0a9d7584cdaab5
-      size: 1926
+      md5: 69f4e998f0288a063f743cee858f559f
+      size: 1915
     outs:
     - path: data/features/X_test.csv
       hash: md5
-      md5: bfbeb0a8737dd99649d718f625a1f754
-      size: 3842102
+      md5: bb60a986786453a05b97506ec02762c1
+      size: 3917854
     - path: data/features/X_train.csv
       hash: md5
-      md5: 00198114c4d86822e74798c85365be9e
-      size: 15580342
+      md5: 395bcd3543786e5c2a4ef006f47fedb2
+      size: 15987448
     - path: data/features/y_test.csv
       hash: md5
-      md5: 68386aa41c7657093dd279b8b0da14f7
-      size: 37579
+      md5: 93282dff384f68dcba024ceddbe7bb2d
+      size: 38314
     - path: data/features/y_train.csv
       hash: md5
-      md5: 5816a6cbcb3f4b0f6d1939289cb0b1cd
-      size: 151591
+      md5: 9d84922c2f3d9f2451be5e373e929be2
+      size: 155593
   train:
     cmd: python -m src.train
     deps:
     - path: data/features/X_train.csv
       hash: md5
-      md5: 00198114c4d86822e74798c85365be9e
-      size: 15580342
+      md5: 395bcd3543786e5c2a4ef006f47fedb2
+      size: 15987448
     - path: data/features/y_train.csv
       hash: md5
-      md5: 5816a6cbcb3f4b0f6d1939289cb0b1cd
-      size: 151591
+      md5: 9d84922c2f3d9f2451be5e373e929be2
+      size: 155593
     - path: src/train.py
       hash: md5
-      md5: 988416c5b6c015e57dfa658dc5211615
-      size: 3016
+      md5: eb24b9deff58e76282b3b01af2d598c7
+      size: 3017
     params:
       params.yaml:
         train:
@@ -97,35 +97,35 @@ stages:
     outs:
     - path: models/model.joblib
       hash: md5
-      md5: 1dd319042997e0686d60189887e7e9cb
-      size: 755270
+      md5: 5ac31f899ebf7d19af3879501e5533bb
+      size: 739846
   evaluate:
     cmd: python -m src.evaluate
     deps:
     - path: data/features/X_test.csv
       hash: md5
-      md5: bfbeb0a8737dd99649d718f625a1f754
-      size: 3842102
+      md5: bb60a986786453a05b97506ec02762c1
+      size: 3917854
     - path: data/features/X_train.csv
       hash: md5
-      md5: 00198114c4d86822e74798c85365be9e
-      size: 15580342
+      md5: 395bcd3543786e5c2a4ef006f47fedb2
+      size: 15987448
     - path: data/features/y_test.csv
       hash: md5
-      md5: 68386aa41c7657093dd279b8b0da14f7
-      size: 37579
+      md5: 93282dff384f68dcba024ceddbe7bb2d
+      size: 38314
     - path: data/features/y_train.csv
       hash: md5
-      md5: 5816a6cbcb3f4b0f6d1939289cb0b1cd
-      size: 151591
+      md5: 9d84922c2f3d9f2451be5e373e929be2
+      size: 155593
     - path: models/model.joblib
       hash: md5
-      md5: 1dd319042997e0686d60189887e7e9cb
-      size: 755270
+      md5: 5ac31f899ebf7d19af3879501e5533bb
+      size: 739846
     - path: src/evaluate.py
       hash: md5
-      md5: c9c36392903e886a51e319aae995f768
-      size: 2948
+      md5: a2741da0b64c2264daf14e039e8b4c27
+      size: 2910
     params:
       params.yaml:
         evaluate:
@@ -133,5 +133,5 @@ stages:
     outs:
     - path: reports/metrics.json
       hash: md5
-      md5: 821d93c713b1b4157d66eb915b07d932
+      md5: de7fb6a6fd0f49de0448d692a9613af4
       size: 311

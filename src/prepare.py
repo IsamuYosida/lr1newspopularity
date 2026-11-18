@@ -3,6 +3,7 @@
 timedelta — часы от первой статьи; большее значение == более старая статья.
 Тест — самые новые статьи (меньший timedelta).
 """
+
 from __future__ import annotations
 
 from pathlib import Path
@@ -56,8 +57,7 @@ def prepare_data(
     cutoff_value = float(train["timedelta"].min())
     print(f"Схема пройдена: {len(data)} строк")
     print(
-        f"Train: {len(train)} | Test: {len(test)} "
-        f"| cutoff timedelta = {cutoff_value}"
+        f"Train: {len(train)} | Test: {len(test)} | cutoff timedelta = {cutoff_value}"
     )
 
 
