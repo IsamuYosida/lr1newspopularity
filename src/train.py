@@ -1,5 +1,8 @@
-"""Обучение модели. Модель выбирается в params.yaml → train.model."""
+"""Обучение модели. Модель выбирается в params.yaml → train.model.
 
+Если задана переменная MLFLOW_TRACKING_URI, этап дополнительно открывает
+запуск в MLflow, пишет туда параметры и саму модель. Метрики допишет evaluate.
+"""
 from __future__ import annotations
 
 from pathlib import Path
@@ -13,6 +16,8 @@ from sklearn.feature_selection import SelectKBest, f_regression
 from sklearn.linear_model import Ridge
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
+
+from src import tracking
 
 
 def make_model(train_params: dict):
@@ -51,7 +56,9 @@ def train(
     params_path: str = "params.yaml",
 ) -> None:
     with open(params_path, encoding="utf-8") as fh:
-        params = yaml.safe_load(fh)["train"]
+        all_params = yaml.safe_load(fh)
+    params = all_params["train"]
+    mlflow_params = all_params.get("mlflow", {})
 
     feat = Path(features_dir)
     X_train = pd.read_csv(feat / "X_train.csv")
@@ -64,15 +71,21 @@ def train(
     if (y_train < 0).any():
         raise ValueError("shares не может быть отрицательным.")
 
+    # Открываем запуск MLflow (если трекинг включён)
+    experiment_name = mlflow_params.get("experiment", "news-popularity")
+    tracking.start_run(experiment_name, params)
+
     model = make_model(params)
-    # log1p стабилизирует тяжёлый хвост shares
     model.fit(X_train, np.log1p(y_train))
 
     out = Path(model_path)
     out.parent.mkdir(parents=True, exist_ok=True)
     joblib.dump(model, out)
 
-    print(f"Модель: {params['model']}")
+    # Логируем модель с сигнатурой входа и примером данных
+    tracking.log_model(model, list(X_train.columns), X_train.head(50))
+
+    print(f"Модель: {params["model"]}")
     print(f"Обучено на {len(X_train)} статьях, {X_train.shape[1]} признаках.")
     print(f"Сохранено: {out}")
 

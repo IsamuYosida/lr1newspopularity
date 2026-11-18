@@ -1,26 +1,26 @@
 prepare:
   test_fraction: 0.2
-
 train:
-  model: hist_gb # linear_ridge | random_forest | hist_gb
+  model: random_forest
   target_transform: log1p
-
   linear_ridge:
     alpha: 10.0
-    select_k: 20 # 0 — без отбора
-
+    select_k: 20
   random_forest:
-    n_estimators: 300
-    max_depth: 20
-    min_samples_leaf: 3
+    n_estimators: 500
+    max_depth: 30
+    min_samples_leaf: 2
     random_state: 42
     n_jobs: -1
-
   hist_gb:
     max_iter: 400
-    max_depth: 6
+    max_depth: 10
     learning_rate: 0.05
     random_state: 42
-
+  _label: random_forest / n=500 / depth=30 / leaf=2
 evaluate:
   min_r2: 0.0
+mlflow:
+  experiment: news-popularity
+  model_name: news-popularity-regressor
+  primary_metric: model_r2
