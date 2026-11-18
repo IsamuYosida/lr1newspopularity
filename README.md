@@ -236,3 +236,39 @@ uv run pytest -q
 └── README.md
 ```
 
+
+## ЛР2 — Эксперименты и реестр моделей
+
+**Адрес эксперимента в DagsHub:** https://dagshub.com/IsamuYosida/lr1newspopularity.mlflow  
+**Имя эксперимента:** `news-popularity`  
+**Имя модели в реестре:** `news-popularity-regressor`
+
+### Таблица запусков
+
+| № | Конфигурация | R² | MAE | RMSE |
+|---|---|---|---|---|
+| 1 | hist_gb / iter=400 / depth=6 / lr=0.05 | 0.0012 | 2087.5 | 8128.6 |
+| 2 | hist_gb / iter=800 / depth=6 / lr=0.02 | 0.0014 | 2083.0 | 8127.9 |
+| 3 | hist_gb / iter=400 / depth=10 / lr=0.05 | -0.0000 | 2077.6 | 8133.5 |
+| 4 | random_forest / n=300 / depth=20 / leaf=3 | 0.0034 | 2114.9 | 8119.5 |
+| 5 | random_forest / n=500 / depth=30 / leaf=2 | 0.0047 | 2129.3 | 8114.4 |
+
+**Вывод:** Наилучшие результаты показала конфигурация `random_forest / n=500 / depth=30 / leaf=2` 
+(R²=0.0047). Увеличение числа итераций с меньшим learning rate 
+даёт прибавку при сопоставимом времени. Линейная регрессия (Ridge) значительно 
+уступает ансамблевым методам на этом датасете с нелинейными зависимостями.
+
+### Текущее состояние реестра
+
+| Алиас | Версия | R² |
+|---|---|---|
+| champion | 1 | 0.004667823282112238 |
+| challenger | 2 | -0.17872309589707336 |
+
+### Загрузка модели по алиасу
+
+```python
+import mlflow
+model = mlflow.sklearn.load_model("models:/news-popularity-regressor@champion")
+predictions = model.predict(X_test)
+```
